@@ -74,7 +74,8 @@ namespace Core
             m_specification.windowWidth = GetScreenWidth();
             m_specification.windowHeight = GetScreenHeight();
 
-            UpdateCamera(m_primaryCamera, CAMERA_FREE);
+            if (!m_isPrimaryCameraLocked)
+                UpdateCamera(m_primaryCamera, CAMERA_FREE);
 
             this->OnUpdate();
             m_entityManager.Update();

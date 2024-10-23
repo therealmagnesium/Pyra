@@ -13,10 +13,11 @@ using namespace Core;
 using namespace Scene;
 using namespace UI;
 
+static bool gridEnabled = true;
+
 Game::Game(ApplicationSpecification& spec) : Application(spec)
 {
     const ApplicationSpecification& appInfo = this->GetSpecification();
-    DisableCursor();
 
     m_camera.position = (v3){-5.f, 3.f, 10.f};
     m_camera.target = (v3){0.f, 0.f, 0.f};
@@ -29,18 +30,23 @@ Game::Game(ApplicationSpecification& spec) : Application(spec)
 
 void Game::OnUpdate()
 {
+    this->SetPrimaryCameraLock(true);
+
+    if (IsKeyPressed(KEY_F1))
+        gridEnabled = !gridEnabled;
 }
 
 void Game::OnRender()
 {
-    DrawGrid(50, 1.f);
+    if (gridEnabled)
+        DrawGrid(50, 1.f);
+
     DrawCubeV((v3){0.f, 0.f, 0.f}, (v3){2.f, 2.f, 2.f}, BLUE);
 }
 
 void Game::OnRenderUI()
 {
     const ApplicationSpecification& appInfo = this->GetSpecification();
-    DrawFPS(20, 20);
 
     ImGui::DockSpaceOverViewport();
     ImGui::Begin("Viewport", NULL, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
@@ -57,6 +63,9 @@ void Game::OnRenderUI()
         source.width = framebuffer.texture.width;
         source.height = -framebuffer.texture.height;
         rlImGuiImageRect(&framebuffer.texture, aspectSize.x, aspectSize.y, source);
+
+        if (ImGui::IsWindowHovered() && IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            this->SetPrimaryCameraLock(false);
     }
     ImGui::End();
 

@@ -38,6 +38,7 @@ namespace Core
         inline bool IsDebugEnabled() const { return m_isDebugEnabled; }
 
         inline void SetDebugEnabled(bool debug) { m_isDebugEnabled = debug; }
+        inline void SetPrimaryCameraLock(bool locked) { m_isPrimaryCameraLocked = locked; }
         inline void SetPrimaryCamera(Camera* camera) { m_primaryCamera = camera; }
         inline std::shared_ptr<Entity> CreateEntity(const char* tag) { return m_entityManager.AddEntity(tag); }
 
@@ -50,6 +51,7 @@ namespace Core
     private:
         bool m_isRunning = true;
         bool m_isDebugEnabled = true;
+        bool m_isPrimaryCameraLocked = true;
         ApplicationSpecification m_specification;
         EntityManager m_entityManager;
 

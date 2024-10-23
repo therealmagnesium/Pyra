@@ -1,5 +1,12 @@
 #include "Application.h"
+#include "UI.h"
+
 #include <raylib.h>
+#include <rlImGui.h>
+#include <rlgl.h>
+#include <imgui.h>
+
+using namespace UI;
 
 namespace Core
 {
@@ -18,14 +25,27 @@ namespace Core
         App = s_instance = this;
 
         InitWindow(m_specification.windowWidth, m_specification.windowHeight, m_specification.name.c_str());
+        SetWindowState(FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_TOPMOST);
         SetTargetFPS(60);
         SetExitKey(KEY_NULL);
+
+        m_editorCamera.position = (v3){0.f, 3.f, 10.f};
+        m_editorCamera.target = (v3){0.f, 0.f, 0.f};
+        m_editorCamera.up = (v3){0.f, 1.f, 0.f};
+        m_editorCamera.projection = CAMERA_PERSPECTIVE;
+        m_editorCamera.fovy = 45.f;
+
+        m_primaryCamera = &m_editorCamera;
+        m_framebuffer = LoadRenderTexture(m_specification.windowWidth, m_specification.windowHeight);
+
+        UISetup();
 
         appInitialized = true;
     }
 
     Application::~Application()
     {
+        UIShutdown();
         CloseWindow();
     }
 
@@ -51,21 +71,35 @@ namespace Core
             if (IsKeyPressed(KEY_ESCAPE))
                 this->Quit();
 
+            m_specification.windowWidth = GetScreenWidth();
+            m_specification.windowHeight = GetScreenHeight();
+
             UpdateCamera(m_primaryCamera, CAMERA_FREE);
+
             this->OnUpdate();
             m_entityManager.Update();
 
-            BeginDrawing();
+            BeginTextureMode(m_framebuffer);
             {
+                ClearBackground({15, 15, 25, 255});
                 BeginMode3D(*m_primaryCamera);
                 {
-                    ClearBackground({15, 15, 25, 255});
                     m_entityManager.DrawEntities();
                     this->OnRender();
                 }
                 EndMode3D();
+            }
+            EndTextureMode();
 
-                this->OnRenderUI();
+            BeginDrawing();
+            {
+                ClearBackground({15, 15, 25, 255});
+
+                UIBeginFrame();
+                {
+                    this->OnRenderUI();
+                }
+                UIEndFrame();
             }
             EndDrawing();
         }

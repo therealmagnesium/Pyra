@@ -17,28 +17,22 @@ includedirs({
     "../App-Core/source",
     "../vendor/raylib/include",
     "../vendor/imgui/include",
-    "../vendor/tmx/include",
 })
 
 libdirs({
     "../vendor/raylib/lib",
     "../vendor/imgui/lib",
-    "../vendor/tmx/lib",
 })
 
 links({
     "App-Core",
-    "raylib",
     "imgui",
-    "rlImGui",
-    "tmx",
-    "z",
-    "xml2",
+    "raylib",
 })
 
 postbuildcommands({
     "cp -r assets/ %{cfg.buildtarget.directory}",
-    --"cp ../imgui.ini %{cfg.buildtarget.directory}",
+    "cp ../imgui.ini %{cfg.buildtarget.directory}",
 })
 
 filter("system:Unix")

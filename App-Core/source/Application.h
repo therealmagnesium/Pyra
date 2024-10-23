@@ -34,7 +34,10 @@ namespace Core
 
         static inline Application* Get() { return s_instance; }
         inline const ApplicationSpecification& GetSpecification() const { return m_specification; }
+        inline const RenderTexture& GetFramebuffer() const { return m_framebuffer; }
+        inline bool IsDebugEnabled() const { return m_isDebugEnabled; }
 
+        inline void SetDebugEnabled(bool debug) { m_isDebugEnabled = debug; }
         inline void SetPrimaryCamera(Camera* camera) { m_primaryCamera = camera; }
         inline std::shared_ptr<Entity> CreateEntity(const char* tag) { return m_entityManager.AddEntity(tag); }
 
@@ -46,8 +49,12 @@ namespace Core
 
     private:
         bool m_isRunning = true;
+        bool m_isDebugEnabled = true;
         ApplicationSpecification m_specification;
         EntityManager m_entityManager;
+
+        RenderTexture m_framebuffer;
+        Camera m_editorCamera;
         Camera* m_primaryCamera = NULL;
 
         static Application* s_instance;

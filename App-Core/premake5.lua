@@ -17,22 +17,16 @@ includedirs({
 	"source",
 	"../vendor/raylib/include",
 	"../vendor/imgui/include",
-	"../vendor/tmx/include",
 })
 
 libdirs({
 	"../vendor/raylib/lib",
 	"../vendor/imgui/lib",
-	"../vendor/tmx/lib",
 })
 
 links({
-	"raylib",
 	"imgui",
-	"rlImGui",
-	"tmx",
-	"z",
-	"xml2",
+	"raylib",
 })
 
 filter("system:Unix")

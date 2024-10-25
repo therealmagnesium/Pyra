@@ -29,7 +29,7 @@ namespace Core
         SetTargetFPS(60);
         SetExitKey(KEY_NULL);
 
-        m_editorCamera.position = (v3){0.f, 3.f, 10.f};
+        m_editorCamera.position = (v3){0.f, 2.f, 7.f};
         m_editorCamera.target = (v3){0.f, 0.f, 0.f};
         m_editorCamera.up = (v3){0.f, 1.f, 0.f};
         m_editorCamera.projection = CAMERA_PERSPECTIVE;
@@ -38,6 +38,13 @@ namespace Core
         m_primaryCamera = &m_editorCamera;
         m_framebuffer = LoadRenderTexture(m_specification.windowWidth, m_specification.windowHeight);
 
+        m_defaultShader = LoadShader("assets/shaders/Default_vs.glsl", "assets/shaders/Default_fs.glsl");
+        m_defaultShader.locs[SHADER_LOC_VECTOR_VIEW] = GetShaderLocation(m_defaultShader, "viewPosition");
+        m_defaultShader.locs[SHADER_LOC_COLOR_AMBIENT] = GetShaderLocation(m_defaultShader, "colAmbient");
+
+        float defaultAmbient[4] = {0.3f, 0.3f, 0.3f, 1.f};
+        SetShaderValue(m_defaultShader, m_defaultShader.locs[SHADER_LOC_COLOR_AMBIENT], defaultAmbient, SHADER_UNIFORM_VEC4);
+
         UISetup();
 
         appInitialized = true;
@@ -45,6 +52,9 @@ namespace Core
 
     Application::~Application()
     {
+        UnloadRenderTexture(m_framebuffer);
+        UnloadShader(m_defaultShader);
+
         UIShutdown();
         CloseWindow();
     }

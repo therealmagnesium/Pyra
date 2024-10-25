@@ -3,6 +3,7 @@
 #include <Application.h>
 #include <Entity.h>
 #include <EntityManager.h>
+#include <Lights.h>
 #include <UI.h>
 
 #include <raylib.h>
@@ -15,6 +16,9 @@ using namespace UI;
 
 static bool gridEnabled = true;
 
+static Model model;
+static DirectionalLight directionalLight;
+
 Game::Game(ApplicationSpecification& spec) : Application(spec)
 {
     const ApplicationSpecification& appInfo = this->GetSpecification();
@@ -25,12 +29,18 @@ Game::Game(ApplicationSpecification& spec) : Application(spec)
     m_camera.projection = CAMERA_PERSPECTIVE;
     m_camera.fovy = 45.f;
 
+    directionalLight = CreateDirectionalLight((v3){0.3f, -1.f, 0.f}, (v3){0.8f, 0.8f, 0.8f}, 1.f);
+
+    model = LoadModelFromMesh(GenMeshTorus(0.4f, 2.f, 16, 32));
+    model.materials[0].shader = this->GetDefaultShader();
+
     // this->SetPrimaryCamera(&m_camera);
 }
 
 void Game::OnUpdate()
 {
     this->SetPrimaryCameraLock(true);
+    UpdateDirectionalLight(directionalLight);
 
     if (IsKeyPressed(KEY_F1))
         gridEnabled = !gridEnabled;
@@ -41,7 +51,7 @@ void Game::OnRender()
     if (gridEnabled)
         DrawGrid(50, 1.f);
 
-    DrawCubeV((v3){0.f, 0.f, 0.f}, (v3){2.f, 2.f, 2.f}, BLUE);
+    DrawModel(model, (v3){0.f, 0.f, 0.f}, 1.f, WHITE);
 }
 
 void Game::OnRenderUI()
@@ -70,8 +80,17 @@ void Game::OnRenderUI()
     ImGui::End();
 
     ImGui::ShowDemoWindow();
+
+    ImGui::Begin("Lighting Properties");
+    {
+        ImGui::DragFloat3("Direction", &directionalLight.direction.x, 0.01f, -1.f, 1.f);
+        ImGui::ColorEdit3("Color", &directionalLight.color.x);
+        ImGui::DragFloat("Intensity", &directionalLight.intensity, 0.01f);
+    }
+    ImGui::End();
 }
 
 void Game::OnShutdown()
 {
+    UnloadModel(model);
 }

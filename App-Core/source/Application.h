@@ -33,9 +33,10 @@ namespace Core
         void Quit();
 
         static inline Application* Get() { return s_instance; }
+        inline bool IsDebugEnabled() const { return m_isDebugEnabled; }
         inline const ApplicationSpecification& GetSpecification() const { return m_specification; }
         inline const RenderTexture& GetFramebuffer() const { return m_framebuffer; }
-        inline bool IsDebugEnabled() const { return m_isDebugEnabled; }
+        inline const Shader& GetDefaultShader() const { return m_defaultShader; }
 
         inline void SetDebugEnabled(bool debug) { m_isDebugEnabled = debug; }
         inline void SetPrimaryCameraLock(bool locked) { m_isPrimaryCameraLocked = locked; }
@@ -56,6 +57,7 @@ namespace Core
         EntityManager m_entityManager;
 
         RenderTexture m_framebuffer;
+        Shader m_defaultShader;
         Camera m_editorCamera;
         Camera* m_primaryCamera = NULL;
 

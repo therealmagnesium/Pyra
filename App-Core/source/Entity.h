@@ -9,7 +9,7 @@
 
 namespace Scene
 {
-    typedef std::tuple<TransformComponent> ComponentTuple;
+    typedef std::tuple<TransformComponent, ModelComponent, CameraComponent> ComponentTuple;
 
     class Entity
     {

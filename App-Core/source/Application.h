@@ -34,6 +34,7 @@ namespace Core
 
         static inline Application* Get() { return s_instance; }
         inline bool IsDebugEnabled() const { return m_isDebugEnabled; }
+        inline Camera* GetPrimaryCamera() const { return m_primaryCamera; }
         inline const ApplicationSpecification& GetSpecification() const { return m_specification; }
         inline const RenderTexture& GetFramebuffer() const { return m_framebuffer; }
         inline const Shader& GetDefaultShader() const { return m_defaultShader; }

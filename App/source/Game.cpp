@@ -19,6 +19,9 @@ static bool gridEnabled = true;
 static Model model;
 static DirectionalLight directionalLight;
 
+std::shared_ptr<Entity> mainCamera;
+std::shared_ptr<Entity> entity;
+
 Game::Game(ApplicationSpecification& spec) : Application(spec)
 {
     const ApplicationSpecification& appInfo = this->GetSpecification();
@@ -31,10 +34,15 @@ Game::Game(ApplicationSpecification& spec) : Application(spec)
 
     directionalLight = CreateDirectionalLight((v3){0.3f, -1.f, 0.f}, (v3){0.8f, 0.8f, 0.8f}, 1.f);
 
-    model = LoadModelFromMesh(GenMeshTorus(0.4f, 2.f, 16, 32));
+    model = LoadModelFromMesh(GenMeshKnot(1.f, 4.f, 16, 128));
     model.materials[0].shader = this->GetDefaultShader();
 
-    // this->SetPrimaryCamera(&m_camera);
+    mainCamera = this->CreateEntity("Main Camera");
+    mainCamera->AddComponent<CameraComponent>(true);
+
+    entity = this->CreateEntity("Entity");
+    entity->AddComponent<TransformComponent>(V3_ZERO, V3_ZERO, (v3){1.f, 1.f, 1.f});
+    entity->AddComponent<ModelComponent>(&model, WHITE);
 }
 
 void Game::OnUpdate()
@@ -50,8 +58,6 @@ void Game::OnRender()
 {
     if (gridEnabled)
         DrawGrid(50, 1.f);
-
-    DrawModel(model, (v3){0.f, 0.f, 0.f}, 1.f, WHITE);
 }
 
 void Game::OnRenderUI()

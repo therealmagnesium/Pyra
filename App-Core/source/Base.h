@@ -32,4 +32,20 @@ typedef struct Vector4 v4;
 #define V3_OPEN(v) v.x, v.y, v.z
 #define V4_OPEN(v) v.x, v.y, v.z, v.w
 
+#define V2_ZERO                                                                                                                                                                    \
+    (v2)                                                                                                                                                                           \
+    {                                                                                                                                                                              \
+        0.f, 0.f                                                                                                                                                                   \
+    }
+#define V3_ZERO                                                                                                                                                                    \
+    (v3)                                                                                                                                                                           \
+    {                                                                                                                                                                              \
+        0.f, 0.f, 0.f                                                                                                                                                              \
+    }
+#define V4_ZERO                                                                                                                                                                    \
+    (v4)                                                                                                                                                                           \
+    {                                                                                                                                                                              \
+        0.f, 0.f, 0.f, 0.f                                                                                                                                                         \
+    }
+
 #define LEN(array) sizeof(array) / sizeof(array[0])
